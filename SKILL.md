@@ -1,9 +1,9 @@
 ---
-name: android-circuit-skills
+name: compose-circuit-skills
 description: Build, review, refactor, debug, and test Kotlin Android or Kotlin Multiplatform features using Slack Circuit and Jetpack Compose or Compose Multiplatform. Use for Circuit Screen, Presenter, Ui, CircuitUiState, CircuitUiEvent, navigation, overlays, retained state, SubCircuit, Compose performance and accessibility, repositories, networking, coroutines, cross-platform boundaries, and Circuit presenter or UI tests. Also use when migrating an existing Compose feature to Circuit. Do not use for generic Kotlin backend work or non-Circuit Android code unless the user requests Circuit adoption, review, or migration.
 ---
 
-# Android Circuit Skills
+# Compose Circuit Skills
 
 ## Overview
 
