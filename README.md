@@ -10,7 +10,27 @@ Codex Agent Skill for building, reviewing, refactoring, debugging, and testing K
 - Android-only and Kotlin Multiplatform boundaries.
 - Presenter, UI, navigation, networking, coroutine, accessibility, and review-focused testing.
 
-## Install
+## Install For AI Agents
+
+This repository is the skill folder. Install it so the final path contains `SKILL.md` directly:
+
+```text
+compose-circuit-skills/
+├── SKILL.md
+├── agents/
+└── references/
+```
+
+Avoid this shape because most skill loaders will not find the skill automatically:
+
+```text
+skills/
+└── compose-circuit-skills/
+    └── compose-circuit-skills/
+        └── SKILL.md
+```
+
+### Codex / Agents Desktop
 
 Clone this repository into your local skills directory:
 
@@ -20,12 +40,72 @@ git clone git@github.com:naufalprakoso/Compose-Circuit-Skills.git \
   "$HOME/.agents/skills/compose-circuit-skills"
 ```
 
+Restart the agent app or start a new session after installing. Invoke it with:
+
+```text
+$compose-circuit-skills
+```
+
+### Codex CLI / CODEX_HOME
+
 If your Codex setup uses `$CODEX_HOME/skills`, install there instead:
 
 ```bash
 mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
 git clone git@github.com:naufalprakoso/Compose-Circuit-Skills.git \
   "${CODEX_HOME:-$HOME/.codex}/skills/compose-circuit-skills"
+```
+
+Then start a new Codex session and invoke:
+
+```text
+$compose-circuit-skills
+```
+
+### Other AI Coding Agents
+
+This is a Codex Skill, so automatic discovery depends on whether the agent supports Codex-style skills. For agents that do not auto-load skills, use the repository as a portable instruction bundle:
+
+1. Point the agent to `SKILL.md`.
+2. Tell it to read only the relevant files under `references/`.
+3. Use this starter prompt:
+
+```text
+Use the Compose Circuit Skills instructions in SKILL.md.
+First inspect this repository's Gradle files, Circuit version, Compose version,
+module conventions, and existing Screen/Presenter/Ui patterns. Load only the
+reference files relevant to the task before implementing or reviewing.
+```
+
+### Update
+
+Pull the latest changes from the installed skill directory:
+
+```bash
+cd "$HOME/.agents/skills/compose-circuit-skills"
+git pull
+```
+
+Or, for `$CODEX_HOME` installs:
+
+```bash
+cd "${CODEX_HOME:-$HOME/.codex}/skills/compose-circuit-skills"
+git pull
+```
+
+### Verify Installation
+
+Check that the skill file exists:
+
+```bash
+test -f "$HOME/.agents/skills/compose-circuit-skills/SKILL.md" && echo "installed"
+```
+
+If you have the Codex skill validator locally, run:
+
+```bash
+python3 /path/to/skill-creator/scripts/quick_validate.py \
+  "$HOME/.agents/skills/compose-circuit-skills"
 ```
 
 ## Usage
