@@ -38,6 +38,24 @@
 - Experimental API is used without acknowledgement.
 - Android type leaks into `commonMain`.
 
+## Coroutine-Specific Smells
+
+- `CoroutineScope(...)` is constructed in a feature class without an injected owner.
+- `GlobalScope`, production `runBlocking`, or thread sleeps appear in UI, presenter, repository, or tests.
+- `Dispatchers.IO`, `Dispatchers.Default`, or `Dispatchers.Main` are hardcoded in logic that should be testable through injected dispatchers.
+- A suspend API is not main-safe and pushes dispatcher choice to its caller.
+- A broad `catch (Exception)` or `runCatching` maps `CancellationException` into an error state.
+- `launch` starts work with no error path, no duplicate-event policy, and no test evidence.
+- `async` is used without awaiting all children.
+- `supervisorScope` is used without a documented partial-failure reason.
+- A cold Flow is collected multiple times for expensive network/database work.
+- `stateIn` or `shareIn` uses a scope whose lifetime is shorter or longer than the data it owns.
+- `SharingStarted.WhileSubscribed` behavior is untested where upstream startup matters.
+- `LaunchedEffect(Unit)` or `LaunchedEffect(true)` starts work that should instead be keyed, event-driven, or lower-layer owned.
+- `rememberCoroutineScope` is used for work that must complete after the screen leaves composition.
+- Retry, timeout, debounce, or polling logic uses real time in tests.
+- A CPU-heavy loop has no suspension point, `isActive`, `ensureActive`, or `yield`.
+
 ## Review Approach
 
 Start with evidence. Prioritize correctness, lifecycle, cancellation, security, data flow, accessibility, and user-visible impact over style. Trace data from source to repository/use case to presenter to state to UI. Provide concrete remediation and suggested verification.

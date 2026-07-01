@@ -53,6 +53,7 @@ Load only the references needed for the task:
 | Circuit factory, codegen, or DI wiring | `codegen-di.md`, `architecture-state.md`, `source-map.md` if APIs are uncertain |
 | Performance | `compose-ui-performance.md`, `testing.md` |
 | Accessibility | `accessibility-quality.md`, `compose-ui-performance.md`, `testing.md` |
+| Coroutine, Flow, lifecycle, or async event work | `coroutines-lifecycle.md`, `testing.md`, `examples.md`, `source-map.md` if official guidance or API behavior is uncertain |
 | Kotlin Multiplatform | `cross-platform.md`, plus relevant architecture/data/UI references |
 | Circuit API uncertainty | `source-map.md`, then current official Circuit docs or matching source tag |
 
@@ -115,6 +116,7 @@ Severity: Critical for likely security compromise, data loss, or severe producti
 - Navigation is typed and follows the project's Circuit convention.
 - Context, Navigator, views, and other leak-prone objects are not stored in retained or saveable state.
 - `GlobalScope` is prohibited, `CancellationException` is not swallowed, and blocking work does not run on the main thread.
+- Suspend APIs are main-safe, dispatchers are injectable in testable logic, and Flow sharing uses an owner with the right lifetime.
 - Long-running durable work is not owned solely by a screen presenter.
 - Raw DTOs, HTTP responses, database cursors, transport exceptions, secrets, and tokens do not leak into UI state.
 - Retry policies are bounded and error-aware; authentication secrets are never logged.

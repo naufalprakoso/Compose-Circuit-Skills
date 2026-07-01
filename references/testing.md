@@ -32,12 +32,23 @@ Cover success, serialization failure, timeout, offline behavior, authentication 
 
 ## Coroutine Tests
 
-- Use virtual time.
-- Avoid real delays.
-- Verify cancellation.
-- Verify latest-query behavior.
-- Verify retries terminate.
-- Verify duplicate operations do not race.
+- Wrap coroutine tests in `runTest`.
+- Inject `TestDispatcher` instances instead of using real dispatchers.
+- Make all test dispatchers share the same `testScheduler`.
+- Prefer `StandardTestDispatcher` for deterministic ordering, `advanceUntilIdle`, and virtual-time assertions.
+- Use `UnconfinedTestDispatcher` only when eager execution is intentional and ordering is not the behavior under test.
+- Use virtual time for debounce, delay, retry, polling, and timeout.
+- Avoid real delays and sleeps.
+- Verify cancellation is propagated, especially through broad catches and `runCatching`-like helpers.
+- Verify timeout paths and cleanup paths.
+- Verify latest-query behavior with `flatMapLatest`, `collectLatest`, debounce, or manual job replacement.
+- Verify retries terminate and do not retry non-transient failures.
+- Verify duplicate operations do not race, double-submit, or navigate twice.
+- Verify parallel work succeeds, cancels siblings on failure, or isolates sibling failure when `supervisorScope` is intentional.
+- Replace Flow producers with fakes that can emit controlled values.
+- Use `first()` for single-emission Flow assertions and `toList()` only for finite flows.
+- Keep an active collector when asserting a `StateFlow` created with `stateIn(SharingStarted.WhileSubscribed(...))`.
+- Assert behavior and meaningful state fields rather than whole state equality when event sink lambdas are present.
 
 ## Snapshot Tests
 

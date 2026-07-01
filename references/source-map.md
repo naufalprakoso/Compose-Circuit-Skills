@@ -33,9 +33,16 @@ Latest Circuit release observed during this update: `0.34.0`. The upstream chang
 | Compose performance | https://developer.android.com/develop/ui/compose/performance |
 | Compose performance best practices | https://developer.android.com/develop/ui/compose/performance/bestpractices |
 | Compose stability | https://developer.android.com/develop/ui/compose/performance/stability |
+| Compose side effects | https://developer.android.com/develop/ui/compose/side-effects |
 | Compose accessibility | https://developer.android.com/develop/ui/compose/accessibility |
 | Compose accessibility testing | https://developer.android.com/develop/ui/compose/accessibility/testing |
 | Android coroutine best practices | https://developer.android.com/kotlin/coroutines/coroutines-best-practices |
+| Android coroutine testing | https://developer.android.com/kotlin/coroutines/test |
+| Android Flow guide | https://developer.android.com/kotlin/flow |
+| Android Flow testing | https://developer.android.com/kotlin/flow/test |
+| Android StateFlow and SharedFlow | https://developer.android.com/kotlin/flow/stateflow-and-sharedflow |
+| Kotlin coroutine cancellation and timeouts | https://kotlinlang.org/docs/cancellation-and-timeouts.html |
+| Kotlin composing suspending functions | https://kotlinlang.org/docs/composing-suspending-functions.html |
 | KMP expect/actual | https://kotlinlang.org/docs/multiplatform/multiplatform-expect-actual.html |
 | KMP platform APIs | https://kotlinlang.org/docs/multiplatform/multiplatform-connect-to-apis.html |
 | Compose Multiplatform behavior | https://kotlinlang.org/docs/multiplatform/compose-platform-specifics.html |

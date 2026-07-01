@@ -7,6 +7,9 @@
 - [Repository-Backed Presenter](#repository-backed-presenter)
 - [Retained Flow Observation](#retained-flow-observation)
 - [Event Suspend Work](#event-suspend-work)
+- [Main-Safe Repository](#main-safe-repository)
+- [Work That Must Complete](#work-that-must-complete)
+- [Parallel Suspend Composition](#parallel-suspend-composition)
 - [Navigator Usage](#navigator-usage)
 - [Pop Result](#pop-result)
 - [Overlay Handling](#overlay-handling)
@@ -141,7 +144,7 @@ return CheckoutState(submitState) { event ->
               SubmitState.Complete
             } catch (e: CancellationException) {
               throw e
-            } catch (e: Exception) {
+            } catch (e: IOException) {
               SubmitState.Failed
             }
         }
@@ -152,6 +155,55 @@ return CheckoutState(submitState) { event ->
 ```
 
 Never use `runCatching` around suspend work unless cancellation is rethrown before mapping failures.
+
+## Main-Safe Repository
+
+```kotlin
+class ProductRepository(
+  private val service: ProductService,
+  private val ioDispatcher: CoroutineDispatcher,
+) {
+  suspend fun product(id: ProductId): Product =
+    withContext(ioDispatcher) {
+      service.fetchProduct(id).toDomain()
+    }
+
+  fun observeProduct(id: ProductId): Flow<Product> =
+    service.observeProduct(id).map { it.toDomain() }
+}
+```
+
+The caller should not choose `Dispatchers.IO`. Inject dispatchers so tests can replace them with `TestDispatcher` instances.
+
+## Work That Must Complete
+
+```kotlin
+class BookmarkRepository(
+  private val dataSource: BookmarkDataSource,
+  private val externalScope: CoroutineScope,
+) {
+  suspend fun bookmark(id: ProductId) {
+    externalScope.async {
+      dataSource.bookmark(id)
+    }.await()
+  }
+}
+```
+
+Use an app, session, or navigation-graph scope only when the operation should complete after the current presenter leaves composition. Keep ordinary screen work tied to the presenter. Use `async/await` when the caller needs failures propagated; reserve `launch/join` for explicit best-effort work with a separate error policy.
+
+## Parallel Suspend Composition
+
+```kotlin
+suspend fun productDetail(id: ProductId): ProductDetail =
+  coroutineScope {
+    val product = async { productRepository.product(id) }
+    val reviews = async { reviewRepository.reviewsFor(id) }
+    ProductDetail(product.await(), reviews.await())
+  }
+```
+
+Use `supervisorScope` only when one failed child should not cancel siblings, and test that partial-failure behavior explicitly.
 
 ## Navigator Usage
 
@@ -320,16 +372,38 @@ fun retryClickEmitsEvent() {
 @Test
 fun retryStopsAfterBound() = runTest {
   val attempts = AtomicInteger(0)
-  val result = runCatching {
+
+  try {
     retryTransient(maxAttempts = 3) {
       attempts.incrementAndGet()
       throw IOException("timeout")
     }
+    fail("Expected retry to fail")
+  } catch (e: IOException) {
+    assertThat(e.message).isEqualTo("timeout")
   }
+
   assertThat(attempts.get()).isEqualTo(3)
-  assertThat(result.isFailure).isTrue()
 }
 ```
+
+## Dispatcher Injection Test
+
+```kotlin
+@Test
+fun repositoryUsesInjectedDispatcher() = runTest {
+  val dispatcher = StandardTestDispatcher(testScheduler)
+  val repository = ProductRepository(fakeService, dispatcher)
+
+  val product = async { repository.product(ProductId("p1")) }
+
+  assertThat(product.isCompleted).isFalse()
+  advanceUntilIdle()
+  assertThat(product.await().id).isEqualTo(ProductId("p1"))
+}
+```
+
+All `TestDispatcher` instances in a test should share the `runTest` scheduler.
 
 ## KMP Boundary
 
@@ -374,6 +448,16 @@ Repository call in Ui to presenter flow:
 ```kotlin
 val scope = rememberCoroutineScope()
 scope.launch { repository.submit() }
+```
+
+For work that must complete after the screen leaves composition, move the lifetime down:
+
+```kotlin
+class OrderRepository(private val externalScope: CoroutineScope) {
+  suspend fun submit(order: Order) {
+    externalScope.async { submitRemote(order) }.await()
+  }
+}
 ```
 
 Raw DTO state to presentation model:
