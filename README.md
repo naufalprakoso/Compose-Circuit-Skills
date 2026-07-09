@@ -1,9 +1,10 @@
 # Compose Circuit Skills
 
-Codex Agent Skill for building, reviewing, refactoring, debugging, and testing Kotlin Android or Kotlin Multiplatform features that use Slack Circuit with Jetpack Compose or Compose Multiplatform.
+Codex Agent Skill for building, reviewing, refactoring, debugging, and testing Kotlin Android, Jetpack Compose, Compose Multiplatform, Kotlin Multiplatform app, and Slack Circuit features.
 
 ## What It Covers
 
+- Android app architecture, Jetpack Compose UI, Compose Multiplatform UI, and Kotlin Multiplatform app boundaries.
 - Slack Circuit screens, presenters, UI state, UI events, factories, navigation, overlays, retained state, and SubCircuit.
 - Compose UI architecture, performance, stability, previews, and accessibility.
 - Repository, networking, coroutine, lifecycle, resilience, and security patterns.
@@ -120,7 +121,7 @@ $compose-circuit-skills Review this presenter for state, coroutine, and navigati
 $compose-circuit-skills Refactor this Compose ViewModel feature into Slack Circuit.
 ```
 
-The skill can also be invoked implicitly for Kotlin Android or KMP work involving Slack Circuit, Compose UI, Circuit presenters, Circuit UI tests, navigation, retained state, SubCircuit, accessibility, networking, coroutines, and migration to Circuit.
+The skill can also be invoked implicitly for Kotlin Android, Compose, Compose Multiplatform, KMP app, or Slack Circuit work involving UI, presenters, navigation, retained state, accessibility, networking, coroutines, tests, or migration to Circuit. It is not intended for generic Kotlin backend, server-side Kotlin, CLI tools, or non-app library work unless Android, Compose, KMP, or Circuit guidance is requested.
 
 ## Structure
 

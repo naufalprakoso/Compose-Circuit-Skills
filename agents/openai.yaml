@@ -1,4 +1,4 @@
 interface:
   display_name: "Compose Circuit Skills"
-  short_description: "Build and review production Kotlin apps with Slack Circuit."
-  default_prompt: "Use $compose-circuit-skills to analyze this Kotlin project and implement or review the requested Slack Circuit feature using appropriate architecture, Compose, coroutine, networking, accessibility, and testing practices."
+  short_description: "Build and review Android, Compose, KMP, and Circuit app features."
+  default_prompt: "Use $compose-circuit-skills to analyze this Kotlin Android, Compose, KMP, or Circuit project and implement or review the requested app feature using appropriate architecture, UI, coroutine, networking, accessibility, and testing practices."
